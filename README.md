@@ -17,7 +17,7 @@ A simple quiz application built with React and TypeScript. The application takes
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/quiz-app.git
+   git clone https://github.com/dbugging404/quiz-app.git
    cd quiz-app
    ```
 

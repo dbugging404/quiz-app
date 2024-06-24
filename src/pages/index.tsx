@@ -220,8 +220,8 @@ const App: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className='flex flex-col justify-center max-w-5xl mx-auto min-h-[80vh] border-b pb-6'>
-          <div className='text-xl py-8'>
+        <div className='flex flex-col justify-start max-w-5xl mx-auto min-h-[70vh] max-h-[70vh] overflow-y-auto border-b'>
+          <div className='text-xl py-6'>
             {currentQuestion && (
               <>
                 {currentQuestionIndex + 1}. {currentQuestion.question}
@@ -248,10 +248,10 @@ const App: React.FC = () => {
               />
             )}
           </div>
-          <div className='mb-8 px-3 py-1 bg-blue-200 flex items-center max-w-fit rounded-full'>
+          <div className='mb-6 px-3 py-1 bg-blue-200 flex items-center max-w-fit rounded-full'>
             Options
           </div>
-          <div className='flex flex-col space-y-4'>
+          <div className='flex flex-col space-y-3'>
             {currentQuestion &&
               Object.keys(currentQuestion.options).map((key) => (
                 <label
@@ -302,7 +302,7 @@ const App: React.FC = () => {
               ))}
           </div>
         </div>
-        <div className='flex space-x-4 my-10 text-base max-w-5xl mx-auto'>
+        <div className='flex space-x-4 mt-5 mb-10 text-base max-w-5xl mx-auto'>
           <button
             onClick={handlePreviousQuestion}
             disabled={currentQuestionIndex === 0}
@@ -323,7 +323,7 @@ const App: React.FC = () => {
               <button
                 key={index}
                 onClick={() => handleSkipToQuestion(index)}
-                className={`w-10 h-10 text-sm rounded-full hover:bg-blue-500 ${
+                className={`w-10 h-10 text-sm rounded-xl hover:bg-blue-500 ${
                   selectedOptions[index]?.length > 0
                     ? 'bg-yellow-500'
                     : 'bg-blue-200'

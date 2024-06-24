@@ -254,15 +254,42 @@ const App: React.FC = () => {
           <div className='flex flex-col space-y-4'>
             {currentQuestion &&
               Object.keys(currentQuestion.options).map((key) => (
-                <label key={key} className='text-base'>
+                <label
+                  key={key}
+                  className={`text-base px-3 py-1.5 rounded-md ${
+                    mode === 'show-answer' &&
+                    currentQuestion.answer.includes(
+                      key as 'a' | 'b' | 'c' | 'd' | 'e'
+                    )
+                      ? 'bg-green-600 text-white'
+                      : ''
+                  } ${
+                    mode === 'instant-feedback' &&
+                    selectedOptions[currentQuestionIndex]?.includes(
+                      key as 'a' | 'b' | 'c' | 'd' | 'e'
+                    )
+                      ? currentQuestion.answer.includes(
+                          key as 'a' | 'b' | 'c' | 'd' | 'e'
+                        )
+                        ? 'bg-green-600 text-white'
+                        : 'bg-red-600 text-white'
+                      : ''
+                  }`}
+                >
                   <input
                     type='checkbox'
                     name='option'
                     value={key}
                     className='mr-3'
-                    checked={(
-                      selectedOptions[currentQuestionIndex] || []
-                    ).includes(key as 'a' | 'b' | 'c' | 'd' | 'e')}
+                    checked={
+                      mode === 'show-answer'
+                        ? currentQuestion.answer.includes(
+                            key as 'a' | 'b' | 'c' | 'd' | 'e'
+                          )
+                        : (
+                            selectedOptions[currentQuestionIndex] || []
+                          ).includes(key as 'a' | 'b' | 'c' | 'd' | 'e')
+                    }
                     onChange={handleOptionChange}
                     disabled={mode === 'show-answer'}
                   />
@@ -273,13 +300,6 @@ const App: React.FC = () => {
                   }
                 </label>
               ))}
-            {mode === 'show-answer' && currentQuestion && (
-              <div className='bg-green-300 px-3 py-2 rounded-lg'>
-                <span className='font-bold text-lg'>Correct Answer: </span>
-                {currentQuestion.options[currentQuestion.answer[0]]}
-              </div>
-            )}
-            {mode === 'instant-feedback' && feedback && <div>{feedback}</div>}
           </div>
         </div>
         <div className='flex space-x-4 my-10 text-base max-w-5xl mx-auto'>
@@ -303,7 +323,7 @@ const App: React.FC = () => {
               <button
                 key={index}
                 onClick={() => handleSkipToQuestion(index)}
-                className={`w-10 h-10 rounded-full hover:bg-blue-500 ${
+                className={`w-10 h-10 text-sm rounded-full hover:bg-blue-500 ${
                   selectedOptions[index]?.length > 0
                     ? 'bg-yellow-500'
                     : 'bg-blue-200'

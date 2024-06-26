@@ -167,10 +167,45 @@ const App: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    setIsQuizFinished(false);
+  };
+
   if (isQuizFinished) {
     return (
-      <div>
-        Your score is: {score}/{questions.length}
+      <div className='w-screen h-screen font-body flex flex-col items-center justify-center'>
+        <div className='flex items-center justify-center space-x-5 text-4xl'>
+          <div className='flex  items-center justify-center space-x-5'>
+            <div>Score:</div>
+            <div className='text-center grid grid-cols-1 divide-y-2 divide-blue-500'>
+              <div
+                className={`${
+                  score / questions.length < 50
+                    ? 'text-red-500'
+                    : 'text-green-500'
+                }`}
+              >
+                {score}
+              </div>
+              <div className='text-blue-500'>{questions.length}</div>
+            </div>
+          </div>
+        </div>
+        <div className='space-x-3'>
+          <button
+            onClick={handleResetQuiz}
+            className='bg-red-500 text-white px-4 py-2 mt-5 rounded-full transition-all duration-150 hover:bg-red-400'
+          >
+            Retry
+          </button>
+          <button
+            className='bg-blue-500 text-white px-4 py-2 mt-5 rounded-full transition-all duration-150 hover:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed'
+            onClick={handleBack}
+            disabled={mode === 'instant-feedback'}
+          >
+            Back
+          </button>
+        </div>
       </div>
     );
   }

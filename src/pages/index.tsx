@@ -24,14 +24,23 @@ const App: React.FC = () => {
   const [mode, setMode] = useState<
     'normal' | 'show-answer' | 'instant-feedback'
   >('normal');
+  const [examMode, setExamMode] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
+  const getRandomQuestions = (questions: Question[], num: number) => {
+    const shuffled = questions.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, num);
+  };
+
   useEffect(() => {
-    // Fetch quiz data from JSON
     fetch('/quizData.json')
       .then((response) => response.json())
       .then((data) => {
-        setQuestions(data);
+        if (examMode) {
+          setQuestions(getRandomQuestions(data, 60));
+        } else {
+          setQuestions(data);
+        }
         const savedState = localStorage.getItem('quizState');
         if (savedState) {
           const { currentQuestionIndex, selectedOptions, score } =
@@ -40,10 +49,10 @@ const App: React.FC = () => {
           setSelectedOptions(selectedOptions);
           setScore(score);
         } else {
-          setSelectedOptions(Array(data.length).fill([]));
+          setSelectedOptions(Array(data.length).fill(null));
         }
       });
-  }, []);
+  }, [examMode]);
 
   useEffect(() => {
     // Save quiz state to local storage
@@ -142,17 +151,30 @@ const App: React.FC = () => {
     selectedMode: 'normal' | 'show-answer' | 'instant-feedback'
   ) => {
     setMode(selectedMode);
+    if (examMode) {
+      setMode('normal');
+    }
   };
 
   const handleResetQuiz = () => {
     if (window.confirm('Are you sure you want to reset the quiz?')) {
       setCurrentQuestionIndex(0);
-      setSelectedOptions(Array(questions.length).fill([]));
+      setSelectedOptions(Array(examMode ? 60 : questions.length).fill(null));
       setScore(0);
       setIsQuizFinished(false);
       setMode('normal');
       setFeedback(null);
       localStorage.removeItem('quizState');
+      // Refetch questions for the selected mode
+      fetch('/quizData.json')
+        .then((response) => response.json())
+        .then((data) => {
+          if (examMode) {
+            setQuestions(getRandomQuestions(data, 60));
+          } else {
+            setQuestions(data);
+          }
+        });
     }
   };
 
@@ -225,7 +247,8 @@ const App: React.FC = () => {
           <div className='lg:flex gap-3 hidden'>
             <button
               onClick={() => toggleMode('show-answer')}
-              className={`max-w-fit px-3 py-1 rounded-full lg:my-6 ${
+              disabled={examMode}
+              className={`max-w-fit px-3 py-1 rounded-full lg:my-6 disabled:opacity-50 disabled:cursor-not-allowed ${
                 mode === 'show-answer'
                   ? 'bg-blue-500 text-white'
                   : 'bg-blue-200'
@@ -243,13 +266,24 @@ const App: React.FC = () => {
             </button>
             <button
               onClick={() => toggleMode('instant-feedback')}
-              className={`max-w-fit px-3 py-1 rounded-full lg:my-6 ${
+              disabled={examMode}
+              className={`max-w-fit px-3 py-1 rounded-full lg:my-6 disabled:opacity-50 disabled:cursor-not-allowed ${
                 mode === 'instant-feedback'
                   ? 'bg-blue-500 text-white'
                   : 'bg-blue-200'
               }`}
             >
               Instant Feedback Mode
+            </button>
+            <button
+              onClick={() => setExamMode(!examMode)}
+              className={`max-w-fit px-3 py-1 rounded-full lg:my-6 ${
+                examMode
+                  ? 'bg-blue-500 text-white hover:bg-red-500'
+                  : 'bg-blue-200'
+              }`}
+            >
+              Exam Mode
             </button>
           </div>
           <div>

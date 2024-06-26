@@ -99,7 +99,6 @@ const App: React.FC = () => {
       )
     ) {
       setFeedback('Correct!');
-      setScore(score + 1);
     } else {
       setFeedback('Incorrect!');
     }
@@ -161,6 +160,13 @@ const App: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const handleFinishQuiz = () => {
+    if (window.confirm('Are you sure you want to finish the quiz?')) {
+      setIsQuizFinished(true);
+      localStorage.removeItem('quizState'); // Clear state when quiz is finished
+    }
+  };
+
   if (isQuizFinished) {
     return (
       <div>
@@ -214,7 +220,8 @@ const App: React.FC = () => {
           <div>
             <button
               onClick={handleResetQuiz}
-              className='bg-red-500 text-white px-4 py-2 lg:my-6 rounded-full'
+              disabled={mode === 'show-answer'}
+              className='bg-red-500 text-white px-4 py-2 lg:my-6 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 hover:bg-red-400'
             >
               Reset Quiz
             </button>
@@ -302,19 +309,28 @@ const App: React.FC = () => {
               ))}
           </div>
         </div>
-        <div className='flex space-x-4 mt-5 mb-10 text-base max-w-5xl mx-auto'>
+        <div className='flex justify-between mt-5 mb-10 text-base max-w-5xl mx-auto'>
+          <div className='space-x-4'>
+            <button
+              onClick={handlePreviousQuestion}
+              disabled={currentQuestionIndex === 0}
+              className='px-4 py-1 bg-blue-200 hover:bg-blue-500 hover:text-white text-black rounded-full transition-all duration-150'
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNextQuestion}
+              className='px-4 py-1 bg-blue-200 hover:bg-blue-500 hover:text-white text-black rounded-full transition-all duration-150'
+            >
+              Next
+            </button>
+          </div>
           <button
-            onClick={handlePreviousQuestion}
-            disabled={currentQuestionIndex === 0}
-            className='px-4 py-1 bg-blue-200 hover:bg-blue-500 hover:text-white text-black rounded-full transition-all duration-150'
+            onClick={handleFinishQuiz}
+            disabled={mode === 'show-answer'}
+            className='px-4 py-1 bg-red-500 hover:bg-red-400 text-white rounded-full transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed'
           >
-            Previous
-          </button>
-          <button
-            onClick={handleNextQuestion}
-            className='px-4 py-1 bg-blue-200 hover:bg-blue-500 hover:text-white text-black rounded-full transition-all duration-150'
-          >
-            Next
+            Finish Quiz
           </button>
         </div>
         <div className='mt-5 max-w-7xl mx-auto flex items-start justify-start pb-16'>

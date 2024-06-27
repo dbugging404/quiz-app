@@ -402,6 +402,46 @@ const App: React.FC = () => {
             Finish Quiz
           </button>
         </div>
+        <div className='lg:hidden gap-3 flex'>
+          <button
+            onClick={() => toggleMode('show-answer')}
+            disabled={examMode}
+            className={`max-w-fit px-3 py-1 text-xs rounded-md lg:my-6 disabled:opacity-50 disabled:cursor-not-allowed ${
+              mode === 'show-answer' ? 'bg-blue-500 text-white' : 'bg-blue-200'
+            }`}
+          >
+            Show Answer Mode
+          </button>
+          <button
+            onClick={() => toggleMode('normal')}
+            className={`max-w-fit px-3 py-1 text-xs rounded-md lg:my-6 ${
+              mode === 'normal' ? 'bg-blue-500 text-white' : 'bg-blue-200'
+            }`}
+          >
+            Normal Mode
+          </button>
+          <button
+            onClick={() => toggleMode('instant-feedback')}
+            disabled={examMode}
+            className={`max-w-fit px-3 py-1 text-xs rounded-md lg:my-6 disabled:opacity-50 disabled:cursor-not-allowed ${
+              mode === 'instant-feedback'
+                ? 'bg-blue-500 text-white'
+                : 'bg-blue-200'
+            }`}
+          >
+            Instant Feedback Mode
+          </button>
+          <button
+            onClick={() => setExamMode(!examMode)}
+            className={`max-w-fit px-3 py-1 text-xs rounded-md lg:my-6 ${
+              examMode
+                ? 'bg-blue-500 text-white hover:bg-red-500'
+                : 'bg-blue-200'
+            }`}
+          >
+            Exam Mode
+          </button>
+        </div>
         <div className='mt-5 max-w-7xl mx-auto flex items-start justify-start pb-16'>
           <div className='flex flex-wrap gap-x-3 gap-y-1.5'>
             {questions.map((_, index) => (
